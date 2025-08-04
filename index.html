@@ -2,54 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>RTMP to HLS Player</title>
+  <title>RTMP Player</title>
   <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
   <style>
     body {
-      background-color: #1e1e1e;
+      background-color: #222;
       color: #fff;
       text-align: center;
-      font-family: Arial, sans-serif;
-      padding-top: 40px;
-    }
-    input, button {
-      padding: 10px;
-      font-size: 16px;
-      margin: 10px;
-      width: 300px;
+      padding-top: 50px;
     }
     .video-js {
       width: 640px;
       height: 360px;
-      margin: 20px auto;
+      margin: auto;
     }
   </style>
 </head>
 <body>
 
-  <h1>RTMP to HLS Stream Player</h1>
+  <h1>RTMP Stream Player</h1>
 
-  <input type="text" id="rtmpUrl" placeholder="Enter RTMP URL (e.g. rtmp://...)" />
-  <button onclick="playStream()">Play Stream</button>
-
-  <video id="hls_player" class="video-js vjs-default-skin" controls preload="auto"></video>
+  <video id="rtmp_player" class="video-js vjs-default-skin" controls autoplay>
+    <source src="rtmp://your-server-address/live/stream" type="rtmp/flv" />
+    <!-- Fallback message -->
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a
+      web browser that supports HTML5 video.
+    </p>
+  </video>
 
   <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/videojs-flash@2.1.2/dist/videojs-flash.min.js"></script>
   <script>
-    function playStream() {
-      const rtmpUrl = document.getElementById('rtmpUrl').value;
-
-      // Convert RTMP to HLS URL (assumes server converts rtmp://... to /hls/stream.m3u8)
-      // Example: rtmp://yourserver/live/stream → https://yourserver/hls/stream.m3u8
-      const hlsUrl = rtmpUrl
-        .replace('rtmp://', 'https://')   // switch protocol
-        .replace('/live/', '/hls/')       // adjust path
-        + '.m3u8';                        // add HLS extension
-
-      const player = videojs('hls_player');
-      player.src({ type: 'application/x-mpegURL', src: hlsUrl });
-      player.play();
-    }
+    var player = videojs('rtmp_player', {
+      techOrder: ['flash'],
+      autoplay: true,
+      controls: true,
+      sources: [{
+        src: 'rtmp://your-server-address/live/stream',
+        type: 'rtmp/flv'
+      }]
+    });
   </script>
 
 </body>
